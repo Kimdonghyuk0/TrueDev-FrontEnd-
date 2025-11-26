@@ -1,0 +1,25 @@
+<section class="view">
+  <div class="view-panel">
+    <div class="view-heading">
+      <p class="eyebrow">TrueDev</p>
+      <h2>로그인</h2>
+      <p class="sub">반가워요! 계정 정보를 입력해주세요.</p>
+    </div>
+    <form id="loginForm" class="form-card" novalidate>
+      <label class="form-field">
+        <span>이메일</span>
+        <input type="email" id="loginEmail" placeholder="이메일을 입력하세요" required />
+      </label>
+      <label class="form-field">
+        <span>비밀번호</span>
+        <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" required />
+      </label>
+      <p class="helper-text" data-role="login-helper"></p>
+      <button type="submit" class="primary-button">로그인</button>
+    </form>
+    <div class="view-actions">
+      <span>아직 회원이 아니신가요?</span>
+      <a href="?view=signup" data-link data-route="signup" class="ghost-button">회원가입</a>
+    </div>
+  </div>
+</section>

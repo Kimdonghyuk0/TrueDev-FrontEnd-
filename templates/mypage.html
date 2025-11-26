@@ -1,0 +1,40 @@
+<section class="view mypage-view">
+  <div class="mypage-grid">
+    <section class="mypage-profile" data-role="mypage-profile">
+      <div class="mypage-profile__avatar" data-role="mypage-avatar">T</div>
+      <div>
+        <h2 data-role="mypage-name">TrueDev Member</h2>
+        <p data-role="mypage-email">user@truedev.com</p>
+        <p class="mypage-bio" data-role="mypage-bio"></p>
+      </div>
+      <div class="mypage-actions">
+        <a data-link data-route="profile" class="ghost-button">회원정보 수정</a>
+        <a data-link data-route="password" class="ghost-button">비밀번호 변경</a>
+      </div>
+    </section>
+
+    <section class="mypage-panel mypage-list" id="mypagePosts">
+      <h3>내가 쓴 글</h3>
+      <ul data-role="mypage-post-list">
+        <li>작성한 글이 없습니다.</li>
+      </ul>
+      <div class="pagination" data-role="mypage-post-pagination">
+        <button type="button" class="ghost-button" data-role="mypage-post-prev">이전</button>
+        <span class="pagination__info" data-role="mypage-post-info"></span>
+        <button type="button" class="ghost-button" data-role="mypage-post-next">다음</button>
+      </div>
+    </section>
+
+    <section class="mypage-panel mypage-list" id="mypageComments">
+      <h3>내가 쓴 댓글</h3>
+      <ul data-role="mypage-comment-list">
+        <li>작성한 댓글이 없습니다.</li>
+      </ul>
+      <div class="pagination" data-role="mypage-comment-pagination">
+        <button type="button" class="ghost-button" data-role="mypage-comment-prev">이전</button>
+        <span class="pagination__info" data-role="mypage-comment-info"></span>
+        <button type="button" class="ghost-button" data-role="mypage-comment-next">다음</button>
+      </div>
+    </section>
+  </div>
+</section>

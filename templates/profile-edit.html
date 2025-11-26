@@ -1,0 +1,29 @@
+<section class="view profile-edit">
+  <div class="profile-edit__wrapper">
+    <header class="profile-edit__header">
+      <button type="button" class="icon-button icon-button--back" data-link data-route="board">&lsaquo;</button>
+      <h2>회원정보수정</h2>
+    </header>
+
+    <form id="profileEditForm" class="profile-edit__form" novalidate>
+      <div class="profile-photo">
+        <div class="profile-photo__circle" data-role="profile-preview">?</div>
+        <input type="file" id="profileEditFile" accept="image/*" hidden />
+        <button type="button" class="ghost-button" data-role="profile-upload-btn">변경</button>
+      </div>
+
+      <label class="form-field">
+        <span>이메일</span>
+        <input type="email" id="profileEmail" readonly />
+      </label>
+      <label class="form-field">
+        <span>닉네임</span>
+        <input type="text" id="profileNickname" placeholder="닉네임을 입력해주세요." />
+      </label>
+      <p class="helper-text" data-role="profile-helper"></p>
+      <button type="submit" class="primary-button">수정완료</button>
+    </form>
+
+    <button type="button" class="ghost-button profile-edit__withdraw">회원 탈퇴</button>
+  </div>
+</section>
