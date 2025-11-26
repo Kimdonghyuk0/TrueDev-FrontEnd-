@@ -103,6 +103,9 @@ export function initBoardView(container) {
   const { user } = getState();
   updateGreeting(greeting, user, sub);
 
+  // 상세 화면 등에서 최신 글 정보가 전달되면 목록/AI 상태 동기화
+  document.addEventListener('article:updated', handleArticleUpdated);
+
   list.addEventListener('click', (event) => {
     const card = event.target.closest('.board-card');
     if (!card) return;
@@ -115,6 +118,17 @@ export function initBoardView(container) {
   });
 
   loadArticles(list, template, tabContainer, statsNodes, paginationControls, pageState.page);
+
+  function handleArticleUpdated(event) {
+    const article = event.detail;
+    if (!article || !article.postId) return;
+    const idx = cachedPosts.findIndex((p) => p.postId === article.postId);
+    if (idx >= 0) {
+      cachedPosts[idx] = enhancePostMetadata({ ...cachedPosts[idx], ...article });
+      renderCurrentCategory(list, template);
+      updateBoardStats(statsNodes);
+    }
+  }
 }
 
 async function loadArticles(list, template, tabContainer, statsNodes, paginationControls, page = 1) {
@@ -143,8 +157,7 @@ async function loadArticles(list, template, tabContainer, statsNodes, pagination
 }
 
 function enhancePostMetadata(post) {
-  const baseId = typeof post.postId === 'number' ? post.postId : Math.floor(Math.random() * 999);
-  const categoryKey = CATEGORY_KEYS[baseId % CATEGORY_KEYS.length];
+  const categoryKey = 'tech'; // 모든 글을 Tech Talk로 표시
   const aiStatus = resolveAIStatus(post);
   return {
     ...post,

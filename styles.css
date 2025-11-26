@@ -425,7 +425,7 @@ body {
   min-height: 220px;
   border-radius: 16px;
   background: #f1f3f7;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   border: 1px solid var(--border);

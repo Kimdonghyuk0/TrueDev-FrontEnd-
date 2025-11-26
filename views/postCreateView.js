@@ -1,4 +1,5 @@
 import { createArticle } from '../api/articles.js';
+import { verifyArticle } from '../api/articles.js';
 import { setHelperText, setLoading } from '../utils/dom.js';
 import { navigate } from '../core/router.js';
 // 에디터가 불안정하여 기본 textarea만 사용
@@ -75,7 +76,18 @@ export async function initPostCreateView(container) {
       if (fileInput?.files?.[0]) {
         formData.append('profileImage', fileInput.files[0]);
       }
-      await createArticle(formData);
+      const res = await createArticle(formData);
+      const createdId = res?.data?.postId;
+      if (createdId) {
+        // 검증 요청은 실패해도 화면 흐름은 유지, 성공 시 최신 글 정보를 전파
+        verifyArticle(createdId)
+          .then((vr) => {
+            if (vr?.data) {
+              document.dispatchEvent(new CustomEvent('article:updated', { detail: vr.data }));
+            }
+          })
+          .catch(() => {});
+      }
       setHelperText(helper, '게시글이 작성되었습니다.', 'success');
       form.reset();
       hiddenTextarea && (hiddenTextarea.value = '');

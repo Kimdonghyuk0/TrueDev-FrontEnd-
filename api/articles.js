@@ -77,3 +77,13 @@ export function deleteComment(articleId, commentId) {
     method: 'DELETE'
   });
 }
+
+export function verifyArticle(id) {
+  return request(`/articles/${id}/verify`, {
+    method: 'POST'
+  });
+}
+
+export function fetchArticleStats() {
+  return request('/articles/stats');
+}

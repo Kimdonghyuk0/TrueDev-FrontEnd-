@@ -61,21 +61,27 @@ export async function mountRichEditor(target, { initialValue = '', placeholder =
 
 export async function renderMarkdown(target, value = '') {
   if (!target) return;
+  // AI 메시지처럼 백틱/JSON이 섞여 들어오는 경우를 위해 텍스트만 출력할 fallback
+  const plain = typeof value === 'string' ? value : '';
   const ready = await ensureEditor();
   const Editor = ready ? getEditorConstructor() : null;
   if (!Editor || typeof Editor.factory !== 'function') {
-    target.textContent = value;
+    target.textContent = plain;
     return;
   }
   target.innerHTML = '';
   const plugins = [];
   const syntaxPlugin = getSyntaxPlugin();
   if (syntaxPlugin) plugins.push(syntaxPlugin);
-  Editor.factory({
-    el: target,
-    viewer: true,
-    initialValue: value || '',
-    usageStatistics: false,
-    plugins
-  });
+  try {
+    Editor.factory({
+      el: target,
+      viewer: true,
+      initialValue: plain || '',
+      usageStatistics: false,
+      plugins
+    });
+  } catch (err) {
+    target.textContent = plain;
+  }
 }

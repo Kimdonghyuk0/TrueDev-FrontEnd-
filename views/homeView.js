@@ -1,4 +1,5 @@
 import { getState } from '../state/store.js';
+import { fetchArticleStats } from '../api/articles.js';
 
 export function initHomeView(container) {
   const greeting = container.querySelector('[data-role="home-greeting"]');
@@ -19,4 +20,15 @@ export function initHomeView(container) {
   if (statReviews) statReviews.textContent = (Math.floor(Math.random() * 10) + 5).toString();
   if (statFailed) statFailed.textContent = (Math.floor(Math.random() * 6) + 2).toString();
   if (statMembers) statMembers.textContent = (Math.floor(Math.random() * 80) + 420).toString();
+
+  fetchArticleStats()
+    .then((res) => {
+      const data = res?.data;
+      if (!data) return;
+      if (statPosts) statPosts.textContent = data.verified ?? 0;
+      if (statReviews) statReviews.textContent = data.pending ?? 0;
+      if (statFailed) statFailed.textContent = data.failed ?? 0;
+      if (statMembers) statMembers.textContent = data.total ?? 0;
+    })
+    .catch(() => {});
 }

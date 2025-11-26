@@ -11,7 +11,7 @@ import {
 import { setHelperText, setLoading } from '../utils/dom.js';
 import { navigate } from '../core/router.js';
 import { renderMarkdown } from '../utils/editor.js';
-import { resolveAIStatus, AI_STATUS } from '../utils/ai.js';
+import { resolveAIStatus, AI_STATUS, parseAiMessage } from '../utils/ai.js';
 
 const CATEGORY_META = {
   tech: 'Tech Talk',
@@ -177,6 +177,8 @@ export async function initPostDetailView(container) {
     const response = await fetchArticleDetail(articleId);
     const { data } = response;
     populateDetail(container, data);
+    // 목록과 동기화: 최신 글 정보를 전파
+    document.dispatchEvent(new CustomEvent('article:updated', { detail: data }));
     loadComments({
       container,
       articleId,
@@ -258,21 +260,58 @@ function populateAIVerdict(container, article) {
   const messageField = container.querySelector('[data-field="ai-message"]');
   const updatedField = container.querySelector('[data-field="ai-updated"]');
   if (!statusField || !messageField) return;
-  const status = resolveAIStatus(article);
+  const parsedAi = parseAiMessage(article.aiMessage);
+  const hasResponse = article.isCheck || parsedAi.hasParsed;
+  const isVerifiedExplicit = article.isVerified === true;
+  const inferredNoMessage = parsedAi.hasParsed && !parsedAi.aiComment;
+  const isVerified = isVerifiedExplicit || (hasResponse && inferredNoMessage);
+  const status = hasResponse ? (isVerified ? AI_STATUS.VERIFIED : AI_STATUS.WARNING) : AI_STATUS.REVIEWING;
+  const aiMsg = cleanAiMessage(article.aiMessage);
+
+  // 상태 배지
   statusField.textContent = status;
   statusField.classList.toggle('is-reviewing', status === AI_STATUS.REVIEWING);
   statusField.classList.toggle('is-warning', status === AI_STATUS.WARNING);
-  messageField.textContent = AI_MESSAGES[status] ?? AI_MESSAGES[AI_STATUS.REVIEWING];
+  statusField.classList.toggle('is-verified', status === AI_STATUS.VERIFIED);
+
+  // 메시지
+  if (isVerified) {
+    statusField.textContent = 'AI VERIFIED';
+    messageField.textContent = aiMsg || 'AI 검증을 통과한 게시글입니다.';
+  } else {
+    const fallbackMessage = AI_MESSAGES[status] ?? AI_MESSAGES[AI_STATUS.REVIEWING];
+    messageField.textContent = aiMsg || fallbackMessage;
+  }
+
   if (updatedField) {
     updatedField.textContent = formatDate(article.editedAt || article.createdAt || new Date().toISOString());
   }
 }
 
+function cleanAiMessage(raw) {
+  if (!raw || typeof raw !== 'string') return '';
+  let text = raw.trim();
+  // ```json ...``` 제거
+  if (text.startsWith('```')) {
+    text = text.replace(/^```[a-zA-Z]*\s*/m, '').replace(/```$/m, '').trim();
+  }
+  // JSON 문자열이면 파싱 후 aiComment 우선 반환
+  try {
+    const parsed = JSON.parse(text);
+    if (typeof parsed === 'object' && parsed !== null) {
+      if (parsed.aiComment) return String(parsed.aiComment);
+      if (parsed.isFact === true) return '';
+    }
+  } catch (e) {
+    // ignore
+  }
+  return text;
+}
+
 function populateCategory(container, article) {
   const label = container.querySelector('[data-role="post-category"]');
   if (!label) return;
-  const key = deriveCategoryKey(article);
-  label.textContent = CATEGORY_META[key] ?? 'TrueDev Thread';
+  label.textContent = CATEGORY_META.tech ?? 'Tech Talk';
 }
 
 function deriveCategoryKey(article) {
