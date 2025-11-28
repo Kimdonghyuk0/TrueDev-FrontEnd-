@@ -277,7 +277,8 @@ function populateAIVerdict(container, article) {
   // 메시지
   if (isVerified) {
     statusField.textContent = 'AI VERIFIED';
-    messageField.textContent = aiMsg || 'AI 검증을 통과한 게시글입니다.';
+    // 성공 시에는 파싱 결과와 무관하게 통일된 문구만 노출
+    messageField.textContent = 'AI 검증을 통과한 게시글입니다.';
   } else {
     const fallbackMessage = AI_MESSAGES[status] ?? AI_MESSAGES[AI_STATUS.REVIEWING];
     messageField.textContent = aiMsg || fallbackMessage;
@@ -289,23 +290,51 @@ function populateAIVerdict(container, article) {
 }
 
 function cleanAiMessage(raw) {
-  if (!raw || typeof raw !== 'string') return '';
+  if (!raw) return '';
+
+  // 객체로 올 수도 있으니 먼저 객체 처리
+  if (typeof raw === 'object') {
+    const aiComment = raw.aiComment ? String(raw.aiComment) : '';
+    if (aiComment) return aiComment;
+    if (raw.isFact === true) return '';
+  }
+
+  if (typeof raw !== 'string') return '';
+
   let text = raw.trim();
   // ```json ...``` 제거
   if (text.startsWith('```')) {
     text = text.replace(/^```[a-zA-Z]*\s*/m, '').replace(/```$/m, '').trim();
   }
-  // JSON 문자열이면 파싱 후 aiComment 우선 반환
-  try {
-    const parsed = JSON.parse(text);
-    if (typeof parsed === 'object' && parsed !== null) {
-      if (parsed.aiComment) return String(parsed.aiComment);
-      if (parsed.isFact === true) return '';
+
+  // 여러 형태로 파싱 시도 (이중 인코딩까지 포함)
+  const candidates = [
+    text,
+    text.replace(/^"(.*)"$/, '$1'),
+    text.replace(/\\"/g, '"').replace(/\\\\/g, '\\'),
+  ];
+
+  for (const cand of candidates) {
+    try {
+      const parsed = JSON.parse(cand);
+      if (typeof parsed === 'object' && parsed !== null) {
+        const aiComment = parsed.aiComment ? String(parsed.aiComment) : '';
+        if (aiComment) return aiComment;
+        if (parsed.isFact === true) return '';
+      }
+    } catch (e) {
+      // ignore and try next
     }
-  } catch (e) {
-    // ignore
   }
-  return text;
+
+  // isFact true 패턴이면 aiComment가 비어있다고 보고 빈 문자열로 처리
+  const plain = text.replace(/\\"/g, '"');
+  const isFactTrue = /"isFact"\s*:\s*true/.test(plain);
+  const aiCommentEmpty = /"aiComment"\s*:\s*""/.test(plain) || !/"aiComment"\s*:/.test(plain);
+  if (isFactTrue && aiCommentEmpty) {
+    return '';
+  }
+  return plain;
 }
 
 function populateCategory(container, article) {

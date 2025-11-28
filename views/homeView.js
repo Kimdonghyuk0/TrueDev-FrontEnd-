@@ -16,10 +16,10 @@ export function initHomeView(container) {
     greeting.style.whiteSpace = 'pre-line';
   }
 
-  if (statPosts) statPosts.textContent = (Math.floor(Math.random() * 50) + 120).toString();
-  if (statReviews) statReviews.textContent = (Math.floor(Math.random() * 10) + 5).toString();
-  if (statFailed) statFailed.textContent = (Math.floor(Math.random() * 6) + 2).toString();
-  if (statMembers) statMembers.textContent = (Math.floor(Math.random() * 80) + 420).toString();
+  if (statPosts) statPosts.textContent = '0';
+  if (statReviews) statReviews.textContent = '0';
+  if (statFailed) statFailed.textContent = '0';
+  if (statMembers) statMembers.textContent = '0';
 
   fetchArticleStats()
     .then((res) => {

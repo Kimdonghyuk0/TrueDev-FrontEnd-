@@ -1,4 +1,4 @@
-import { fetchArticles } from '../api/articles.js';
+import { fetchArticles, fetchArticleStats } from '../api/articles.js';
 import { renderBoardList, showBoardMessage } from '../components/boardList.js';
 import { getState } from '../state/store.js';
 import { navigate } from '../core/router.js';
@@ -197,8 +197,22 @@ function renderCurrentCategory(list, template) {
   renderBoardList(filtered, list, template);
 }
 
-function updateBoardStats(statsNodes = {}) {
+async function updateBoardStats(statsNodes = {}) {
   if (!statsNodes) return;
+  try {
+    const res = await fetchArticleStats();
+    const data = res?.data;
+    if (data) {
+      if (statsNodes.verified) statsNodes.verified.textContent = String(data.verified ?? 0);
+      if (statsNodes.pending) statsNodes.pending.textContent = String(data.pending ?? 0);
+      if (statsNodes.failed) statsNodes.failed.textContent = String(data.failed ?? 0);
+      if (statsNodes.total) statsNodes.total.textContent = String(data.total ?? 0);
+      return;
+    }
+  } catch (e) {
+    // ignore
+  }
+  // fallback: 계산된 캐시로 표시
   const totals = cachedPosts.reduce(
     (acc, post) => {
       const status = resolveAIStatus(post);
@@ -212,10 +226,7 @@ function updateBoardStats(statsNodes = {}) {
   if (statsNodes.verified) statsNodes.verified.textContent = totals.verified.toString();
   if (statsNodes.pending) statsNodes.pending.textContent = totals.pending.toString();
   if (statsNodes.failed) statsNodes.failed.textContent = totals.failed.toString();
-  if (statsNodes.total) {
-    const totalArticles = pageState.totalArticles || cachedPosts.length || 0;
-    statsNodes.total.textContent = totalArticles.toString();
-  }
+  if (statsNodes.total) statsNodes.total.textContent = String(pageState.totalArticles || cachedPosts.length || 0);
 }
 
 function updatePaginationControls(controls = {}) {

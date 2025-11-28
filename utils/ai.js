@@ -21,6 +21,8 @@ export function resolveAIStatus(entity) {
 
   // 3) 검증 응답 플래그
   if (entity.isCheck === true) {
+    const aiText = (entity.aiMessage || '').trim();
+    if (!aiText) return AI_STATUS.VERIFIED;
     return entity.isVerified ? AI_STATUS.VERIFIED : AI_STATUS.WARNING;
   }
   if (entity.isCheck === false || entity.isCheck === null || typeof entity.isCheck === 'undefined') {

@@ -70,10 +70,12 @@ export function initSignupView(container) {
       'user',
       new Blob([JSON.stringify({ email, password, name })], {
         type: 'application/json'
-      })
+      }),
+      'user.json'
     );
     if (fileInput?.files?.[0]) {
-      formData.append('profileImage', fileInput.files[0]);
+      const file = fileInput.files[0];
+      formData.append('profileImage', file, file.name);
     }
 
     const submitButton = form.querySelector('[type="submit"]');

@@ -41,6 +41,36 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* 다크 모드에서 모든 주요 텍스트를 밝게 통일 */
+[data-theme='dark'] body,
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6,
+[data-theme='dark'] p,
+[data-theme='dark'] span,
+[data-theme='dark'] a,
+[data-theme='dark'] button,
+[data-theme='dark'] input,
+[data-theme='dark'] textarea,
+[data-theme='dark'] label,
+[data-theme='dark'] li,
+[data-theme='dark'] small,
+[data-theme='dark'] strong,
+[data-theme='dark'] .helper-text {
+  color: var(--text-main) !important;
+}
+
+[data-theme='dark'] a {
+  text-decoration: none;
+}
+
+[data-theme='dark'] .header-nav a:hover {
+  color: var(--accent);
+}
+
 * {
   box-sizing: border-box;
   font-family: 'Space Grotesk', 'Pretendard', 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
