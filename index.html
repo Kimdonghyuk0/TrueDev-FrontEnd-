@@ -3,88 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TrueDev &mdash; AI 검증 개발 커뮤니티</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@toast-ui/editor@3.2.2/dist/toastui-editor.min.css" />
-    <link
-      rel="stylesheet"
-      href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <title>TrueDev — AI 검증 개발 커뮤니티</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   </head>
   <body data-theme="light">
-    <div class="app-background">
-      <div class="app-surface">
-        <header class="app-header">
-          <div class="brand-block">
-            <a class="brand-link" href="?view=login" data-link data-route="login">TrueDev</a>
-            <span class="brand-tagline">AI 검증 기반 개발자 커뮤니티</span>
-          </div>
-          <div class="header-controls">
-            <nav class="header-nav">
-              <a href="?view=home" data-link data-route="home">홈</a>
-              <a href="?view=board" data-link data-route="board">커뮤니티</a>
-              <a href="?view=mypage" data-link data-route="mypage">마이페이지</a>
-            </nav>
-            <div class="profile-menu" data-role="profile-menu">
-              <button
-                type="button"
-                class="header-avatar"
-                id="headerAvatar"
-                aria-haspopup="true"
-                aria-expanded="false"
-                aria-label="프로필 메뉴 열기"
-              ></button>
-              <div class="profile-menu__panel" data-role="profile-panel">
-                <a href="?view=profile" data-link data-route="profile">회원정보수정</a>
-                <a href="?view=password" data-link data-route="password">비밀번호 수정</a>
-                <button type="button" data-role="logout-btn">로그아웃</button>
-              </div>
-            </div>
-          </div>
-        </header>
-        <main id="app-view" class="app-main" aria-live="polite">
-          <div class="empty-state">화면을 불러오는 중입니다...</div>
-        </main>
-      </div>
-      <button type="button" class="theme-toggle" data-role="theme-toggle" aria-label="테마 전환">🌙</button>
-      <button type="button" class="info-toggle" data-role="process-toggle" aria-label="TrueDev 검증 프로세스">?</button>
-      <div class="process-panel" data-role="process-panel">
-        <h4>TrueDev 검증 프로세스</h4>
-        <p>AI가 정보의 정확성과 커뮤니티 가이드를 동시에 확인합니다.</p>
-        <ol class="home-process">
-          <li>게시글/댓글 작성</li>
-          <li>AI 유해/주제 판별</li>
-        <li>AI 검증 및 피드백</li>
-          <li>커뮤니티 공개</li>
-        </ol>
-      </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" crossorigin="anonymous"></script>
-    <script>
-      // 일부 환경에서 TOAST UI Editor가 참조하는 window.VSC가 없어 발생하는 오류를 방지
-      if (!window.VSC) {
-        window.VSC = { inIframe: () => false };
-      }
-    </script>
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <script
-      src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      // uicdn 로드가 막힌 경우 jsDelivr로 대체 로드
-      if (!window.toastui || !window.toastui.Editor) {
-        const fallbackJs = document.createElement('script');
-        fallbackJs.src = 'https://cdn.jsdelivr.net/npm/@toast-ui/editor@3.2.2/dist/toastui-editor-all.min.js';
-        document.head.appendChild(fallbackJs);
-        const fallbackPlugin = document.createElement('script');
-        fallbackPlugin.src =
-          'https://cdn.jsdelivr.net/npm/@toast-ui/editor-plugin-code-syntax-highlight@3.2.2/dist/toastui-editor-plugin-code-syntax-highlight.min.js';
-        document.head.appendChild(fallbackPlugin);
-      }
-    </script>
-    <script type="module" src="./main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
