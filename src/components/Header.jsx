@@ -83,7 +83,7 @@ export default function Header({ onLogout }) {
             {avatarText}
           </button>
           <div className="profile-menu__panel" data-role="profile-panel">
-            <Link to="/profile">회원정보수정</Link>
+            <Link to="/profile">회원정보 수정</Link>
             <Link to="/password">비밀번호 수정</Link>
             <button type="button" onClick={handleLogout}>
               로그아웃
